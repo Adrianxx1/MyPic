@@ -6,6 +6,7 @@ import App from "./App";
 import "./index.css";
 import {mode} from '@chakra-ui/theme-tools'
 import { color } from "framer-motion";
+import { BrowserRouter } from "react-router-dom";
 
 const styles = {
   global: (props) => ({
@@ -24,8 +25,10 @@ const theme = extendTheme({ config,styles })
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <BrowserRouter>
     <ChakraProvider theme={theme}>
       <App />
     </ChakraProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );

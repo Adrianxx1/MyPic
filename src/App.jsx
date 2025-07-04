@@ -1,10 +1,13 @@
 import { Button, HStack } from "@chakra-ui/react";
+import { Route, Routes } from "react-router-dom";
+import HomePage from "../pages/HomePage/HomePage";
 
 export default function App() {
   return (
-    <HStack spacing={4} justify="center" mt={10}>
-      <Button colorScheme="teal">Botón 1</Button>
-      <Button colorScheme="blue">Botón 2</Button>
-    </HStack>
+    <>
+      <Routes>
+        <Route path='/' element={<HomePage/> }/>
+      </Routes>
+    </>
   );
 }
