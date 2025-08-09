@@ -1,6 +1,8 @@
 import { Flex, GridItem, Text, Image, useDisclosure, Modal, ModalOverlay, ModalHeader, ModalBody, ModalCloseButton, ModalContent} from "@chakra-ui/react";
 import { AiFillHeart } from "react-icons/ai";
-import { FaCommennt } from 'react-icons/fa';
+import { FaComment } from "react-icons/fa";
+
+
 
 const ProfilePost = ({img}) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -13,7 +15,7 @@ const ProfilePost = ({img}) => {
     border={"1px solid"}
     borderColor={"whiteAlpha.300"}
     position={"relative"}
-    aspectRatio={1/1}
+    aspectRatio= "1 / 1"
     onClick={onOpen}
     
     >
@@ -39,7 +41,7 @@ const ProfilePost = ({img}) => {
     </Flex>
 
     <Flex>
-        <FaCommennt size={20}/>
+        <FaComment size={20}/>
         <Text fontWeight={"bold"} ml={2}>
             7
         </Text>

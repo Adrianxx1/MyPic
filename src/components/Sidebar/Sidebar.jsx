@@ -1,7 +1,7 @@
-import { Box, Flex, Tooltip, Avatar } from "@chakra-ui/react";
-import { Link, Link as RouterLink } from "react-router-dom";
+import { Box, Flex, Tooltip, Avatar, Link as ChakraLink } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import { CreatePostLogo, NotificationsLogo, SearchLogo } from "@/assets/constants";
-import { AiFillHome } from "react-icons/ai"; 
+import { AiFillHome } from "react-icons/ai";
 import { BiLogOut } from "react-icons/bi";
 
 const Sidebar = () => {
@@ -26,8 +26,8 @@ const Sidebar = () => {
         {
             icon: <Avatar size={"sm"} name='Burak Orkmez' src='/profilepic.png' />,
             text: "Profile",
-            link: "/asaprogramer",
-        },        
+            link: "/username",
+        },
     ];
 
     return (
@@ -41,27 +41,32 @@ const Sidebar = () => {
             left={0}
             px={{ base: 2, md: 4 }}
         >
-            <Flex direction={"column"} gap={4} w='full' height={"full"}>
+            <Flex direction={"column"} gap={4} w="full" height={"full"}>
                 {/* Logo Desktop */}
-                <Link to={"/"} as={RouterLink} p={1} display={{ base: "none", md: "block" }} cursor="pointer">
-                <img
-                    src="/logo1.png"
-                    alt="Logo Desktop"
-                    style={{
-                    height: "156px",       // Aumentado
-                    maxWidth: "100%",
-                    objectFit: "contain"
-                    }}
+                <ChakraLink
+                    as={RouterLink}
+                    to="/"
+                    p={1}
+                    display={{ base: "none", md: "block" }}
+                    cursor="pointer"
+                >
+                    <img
+                        src="/logo1.png"
+                        alt="Logo Desktop"
+                        style={{
+                            height: "156px",
+                            maxWidth: "100%",
+                            objectFit: "contain",
+                        }}
                     />
-
-                </Link>
+                </ChakraLink>
 
                 {/* Logo Mobile */}
-                <Link 
-                    to={"/"} 
-                    as={RouterLink} 
-                    p={2} 
-                    display={{ base: "block", md: "none" }} 
+                <ChakraLink
+                    as={RouterLink}
+                    to="/"
+                    p={2}
+                    display={{ base: "block", md: "none" }}
                     borderRadius={6}
                     _hover={{ bg: "whiteAlpha.200" }}
                     w={10}
@@ -72,10 +77,10 @@ const Sidebar = () => {
                         alt="Logo Mobile"
                         style={{
                             height: "34px",
-                            objectFit: "contain"
+                            objectFit: "contain",
                         }}
                     />
-                </Link>
+                </ChakraLink>
 
                 {/* Sidebar Items */}
                 <Flex direction={"column"} gap={5} cursor={"pointer"}>
@@ -87,12 +92,12 @@ const Sidebar = () => {
                             placement="right"
                             ml={1}
                             openDelay={500}
-                            display={{ base: 'block', md: 'none' }}
+                            display={{ base: "block", md: "none" }}
                         >
-                            <Link
-                                display={"flex"}
-                                to={item.link || null}
+                            <ChakraLink
                                 as={RouterLink}
+                                to={item.link || "#"}
+                                display={"flex"}
                                 alignItems={"center"}
                                 gap={4}
                                 _hover={{ bg: "whiteAlpha.400" }}
@@ -105,7 +110,7 @@ const Sidebar = () => {
                                 <Box display={{ base: "none", md: "block" }}>
                                     {item.text}
                                 </Box>
-                            </Link>
+                            </ChakraLink>
                         </Tooltip>
                     ))}
                 </Flex>
@@ -117,12 +122,12 @@ const Sidebar = () => {
                     placement="right"
                     ml={1}
                     openDelay={500}
-                    display={{ base: 'block', md: 'none' }}
+                    display={{ base: "block", md: "none" }}
                 >
-                    <Link
-                        display={"flex"}
-                        to={"/auth"}
+                    <ChakraLink
                         as={RouterLink}
+                        to="/auth"
+                        display={"flex"}
                         alignItems={"center"}
                         gap={4}
                         _hover={{ bg: "whiteAlpha.400" }}
@@ -134,11 +139,11 @@ const Sidebar = () => {
                     >
                         <BiLogOut size={25} />
                         <Box display={{ base: "none", md: "block" }}>Logout</Box>
-                    </Link>
+                    </ChakraLink>
                 </Tooltip>
             </Flex>
         </Box>
-    );    
+    );
 };
 
 export default Sidebar;
