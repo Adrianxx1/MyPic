@@ -4,7 +4,7 @@ import AuthPage from "../pages/AuthPage/AuthPage";
 import PageLayout from "./Layouts/PageLayout/PageLayout";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 
-export default function App() {
+function App() {
   return (
     <PageLayout>
       <Routes>
@@ -15,4 +15,6 @@ export default function App() {
     </PageLayout>
   );
 }
+
+export default App;
 
