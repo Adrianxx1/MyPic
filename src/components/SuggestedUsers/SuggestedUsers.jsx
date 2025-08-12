@@ -24,7 +24,7 @@ const SuggestedUsers = () => {
         <Box fontSize={12} color={"gray.500"} mt={5} alignSelf={"start"}>
             ©2025 Build By{" "}
             <Link href='' target='_blank' color='blue.500' fontSize={14}>
-                As a programmaer
+                MyPicTeam
             </Link>
         </Box>
     </VStack>
