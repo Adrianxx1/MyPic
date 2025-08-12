@@ -124,10 +124,8 @@ const Sidebar = () => {
                     openDelay={500}
                     display={{ base: "block", md: "none" }}
                 >
-                    <ChakraLink
-                        as={RouterLink}
-                        to="/auth"
-                        display={"flex"}
+                    <Flex
+                        onClick={handleLogout}
                         alignItems={"center"}
                         gap={4}
                         _hover={{ bg: "whiteAlpha.400" }}
@@ -139,7 +137,7 @@ const Sidebar = () => {
                     >
                         <BiLogOut size={25} />
                         <Box display={{ base: "none", md: "block" }}>Logout</Box>
-                    </ChakraLink>
+                    </Flex>
                 </Tooltip>
             </Flex>
         </Box>
