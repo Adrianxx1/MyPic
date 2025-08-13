@@ -11,7 +11,7 @@ const useLogin = () => {
 
 	const login = async (inputs) => {
 		if (!inputs.email || !inputs.password) {
-			return showToast("Error", "Please fill all the fields", "error");
+			return showToast("Error", "Por favor rellena todos los campos", "error");
 		}
 		try {
 			const userCred = await signInWithEmailAndPassword(inputs.email, inputs.password);

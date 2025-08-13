@@ -16,7 +16,7 @@ const Signup = () => {
 	return (
 		<>
 			<Input
-				placeholder='Correo'
+				placeholder='Correo electronico'
 				fontSize={14}
 				type='email'
 				size={"sm"}
@@ -24,7 +24,7 @@ const Signup = () => {
 				onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
 			/>
 			<Input
-				placeholder='Nombre de usuario'
+				placeholder='Usuario'
 				fontSize={14}
 				type='text'
 				size={"sm"}
@@ -32,7 +32,7 @@ const Signup = () => {
 				onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
 			/>
 			<Input
-				placeholder='Nombre Completo'
+				placeholder='Nombre completo'
 				fontSize={14}
 				type='text'
 				size={"sm"}
@@ -70,7 +70,7 @@ const Signup = () => {
 				isLoading={loading}
 				onClick={() => signup(inputs)}
 			>
-				Sign Up
+				Registrarte
 			</Button>
 		</>
 	);

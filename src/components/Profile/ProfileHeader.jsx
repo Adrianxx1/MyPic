@@ -36,7 +36,7 @@ const ProfileHeader = () => {
 								size={{ base: "xs", md: "sm" }}
 								onClick={onOpen}
 							>
-								Edit Profile
+								Editar Perfil
 							</Button>
 						</Flex>
 					)}
@@ -61,19 +61,19 @@ const ProfileHeader = () => {
 						<Text as='span' fontWeight={"bold"} mr={1}>
 							{userProfile.posts.length}
 						</Text>
-						Posts
+						Publicaciones 
 					</Text>
 					<Text fontSize={{ base: "xs", md: "sm" }}>
 						<Text as='span' fontWeight={"bold"} mr={1}>
 							{userProfile.followers.length}
 						</Text>
-						Followers
+						Seguidores
 					</Text>
 					<Text fontSize={{ base: "xs", md: "sm" }}>
 						<Text as='span' fontWeight={"bold"} mr={1}>
 							{userProfile.following.length}
 						</Text>
-						Following
+						Siguiendo
 					</Text>
 				</Flex>
 				<Flex alignItems={"center"} gap={4}>
