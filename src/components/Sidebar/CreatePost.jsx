@@ -132,7 +132,7 @@ function useCreatePost() {
 
 	const handleCreatePost = async (selectedFile, caption) => {
 		if (isLoading) return;
-		if (!selectedFile) throw new Error("Please select an image");
+		if (!selectedFile) throw new Error("Por favor selecciona tu imagen");
 		setIsLoading(true);
 		const newPost = {
 			caption: caption,
