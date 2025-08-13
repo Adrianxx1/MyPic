@@ -32,7 +32,7 @@ const SuggestedHeader = () => {
 				isLoading={isLoggingOut}
 				cursor={"pointer"}
 			>
-				Log out
+				Cierra sesion
 			</Button>
 		</Flex>
 	);
