@@ -68,7 +68,7 @@ const Sidebar = () => {
 							_hover={{ bg: "transparent" }}
 							isLoading={isLoggingOut}
 						>
-							Logout
+							Salir
 						</Button>
 					</Flex>
 				</Tooltip>

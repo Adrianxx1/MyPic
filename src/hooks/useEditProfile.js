@@ -41,7 +41,7 @@ const useEditProfile = () => {
 			localStorage.setItem("user-info", JSON.stringify(updatedUser));
 			setAuthUser(updatedUser);
 			setUserProfile(updatedUser);
-			showToast("Success", "Profile updated successfully", "success");
+			showToast("Success", "Pefil actualizado exitosamente ", "success");
 		} catch (error) {
 			showToast("Error", error.message, "error");
 		}

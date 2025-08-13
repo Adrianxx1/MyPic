@@ -50,25 +50,25 @@ const Search = () => {
 					onClick={onOpen}
 				>
 					<SearchLogo />
-					<Box display={{ base: "none", md: "block" }}>Search</Box>
+					<Box display={{ base: "none", md: "block" }}>Buscar</Box>
 				</Flex>
 			</Tooltip>
 
 			<Modal isOpen={isOpen} onClose={onClose} motionPreset='slideInLeft'>
 				<ModalOverlay />
 				<ModalContent bg={"black"} border={"1px solid gray"} maxW={"400px"}>
-					<ModalHeader>Search user</ModalHeader>
+					<ModalHeader>Buscar Usuario</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody pb={6}>
 						<form onSubmit={handleSearchUser}>
 							<FormControl>
-								<FormLabel>Username</FormLabel>
-								<Input placeholder='asaprogrammer' ref={searchRef} />
+								<FormLabel>Usuario</FormLabel>
+								<Input placeholder='pumalud' ref={searchRef} />
 							</FormControl>
 
 							<Flex w={"full"} justifyContent={"flex-end"}>
 								<Button type='submit' ml={"auto"} size={"sm"} my={4} isLoading={isLoading}>
-									Search
+									Buscar
 								</Button>
 							</Flex>
 						</form>
@@ -81,3 +81,4 @@ const Search = () => {
 };
 
 export default Search;
+

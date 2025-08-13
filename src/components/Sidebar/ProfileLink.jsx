@@ -1,12 +1,14 @@
-import { Box, Link, Tooltip } from "@chakra-ui/react";
-import { AiFillHome } from "react-icons/ai";
+import { Avatar, Box, Link, Tooltip } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
 
-const Inicio = () => {
+const ProfileLink = () => {
+	const authUser = useAuthStore((state) => state.user);
+
 	return (
 		<Tooltip
 			hasArrow
-			label={"Home"}
+			label={"Profile"}
 			placement='right'
 			ml={1}
 			openDelay={500}
@@ -14,7 +16,7 @@ const Inicio = () => {
 		>
 			<Link
 				display={"flex"}
-				to={"/"}
+				to={`/${authUser?.username}`}
 				as={RouterLink}
 				alignItems={"center"}
 				gap={4}
@@ -24,11 +26,11 @@ const Inicio = () => {
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-				<AiFillHome size={25} />
-				<Box display={{ base: "none", md: "block" }}>Inicio</Box>
+				<Avatar size={"sm"} src={authUser?.profilePicURL || ""} />
+				<Box display={{ base: "none", md: "block" }}>Perfil</Box>
 			</Link>
 		</Tooltip>
 	);
 };
 
-export default Inicio;
+export default ProfileLink;

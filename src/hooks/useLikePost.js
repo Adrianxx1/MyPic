@@ -13,7 +13,7 @@ const useLikePost = (post) => {
 
 	const handleLikePost = async () => {
 		if (isUpdating) return;
-		if (!authUser) return showToast("Error", "You must be logged in to like a post", "error");
+		if (!authUser) return showToast("Error", "Debes iniciar sesión para interactuar", "error");
 		setIsUpdating(true);
 
 		try {

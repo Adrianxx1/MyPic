@@ -1,44 +1,39 @@
-import { Avatar, Flex, Skeleton, SkeletonCircle, Text } from "@chakra-ui/react";
-import useGetUserProfileById from "../../hooks/useGetUserProfileById";
-import { Link } from "react-router-dom";
-import { timeAgo } from "../../utils/timeAgo";
+import { useState } from "react";
+import useShowToast from "./useShowToast";
+import useAuthStore from "../store/authStore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { firestore } from "../firebase/firebase";
+import usePostStore from "../store/postStore";
 
-const Comment = ({ comment }) => {
-	const { userProfile, isLoading } = useGetUserProfileById(comment.createdBy);
+const usePostComment = () => {
+	const [isCommenting, setIsCommenting] = useState(false);
+	const showToast = useShowToast();
+	const authUser = useAuthStore((state) => state.user);
+	const addComment = usePostStore((state) => state.addComment);
 
-	if (isLoading) return <CommentSkeleton />;
-	return (
-		<Flex gap={4}>
-			<Link to={`/${userProfile.username}`}>
-				<Avatar src={userProfile.profilePicURL} size={"sm"} />
-			</Link>
-			<Flex direction={"column"}>
-				<Flex gap={2} alignItems={"center"}>
-					<Link to={`/${userProfile.username}`}>
-						<Text fontWeight={"bold"} fontSize={12}>
-							{userProfile.username}
-						</Text>
-					</Link>
-					<Text fontSize={14}>{comment.comment}</Text>
-				</Flex>
-				<Text fontSize={12} color={"gray"}>
-					{timeAgo(comment.createdAt)}
-				</Text>
-			</Flex>
-		</Flex>
-	);
+	const handlePostComment = async (postId, comment) => {
+		if (isCommenting) return;
+		if (!authUser) return showToast("Error", "Debes haber iniciado sesión para comentar", "error");
+		setIsCommenting(true);
+		const newComment = {
+			comment,
+			createdAt: Date.now(),
+			createdBy: authUser.uid,
+			postId,
+		};
+		try {
+			await updateDoc(doc(firestore, "posts", postId), {
+				comments: arrayUnion(newComment),
+			});
+			addComment(postId, newComment);
+		} catch (error) {
+			showToast("Error", error.message, "error");
+		} finally {
+			setIsCommenting(false);
+		}
+	};
+
+	return { isCommenting, handlePostComment };
 };
 
-export default Comment;
-
-const CommentSkeleton = () => {
-	return (
-		<Flex gap={4} w={"full"} alignItems={"center"}>
-			<SkeletonCircle h={10} w='10' />
-			<Flex gap={1} flexDir={"column"}>
-				<Skeleton height={2} width={100} />
-				<Skeleton height={2} width={50} />
-			</Flex>
-		</Flex>
-	);
-};
+export default usePostComment;
