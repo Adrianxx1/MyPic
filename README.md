@@ -1,3 +1,1 @@
-# MyPic - React + Chakra UI
-
-Proyecto base listo para iniciar una app con Chakra UI y Vite.
+  Este proyecto se basa en una red social
