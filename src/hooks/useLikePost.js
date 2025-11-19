@@ -1,37 +1,51 @@
 import { useState } from "react";
+import { firestore } from "../firebase/firebase";
 import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { firestore } from "../firebase/firebase";
+import { doc, updateDoc, arrayUnion, arrayRemove, collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const useLikePost = (post) => {
-	const [isUpdating, setIsUpdating] = useState(false);
-	const authUser = useAuthStore((state) => state.user);
-	const [likes, setLikes] = useState(post.likes.length);
-	const [isLiked, setIsLiked] = useState(post.likes.includes(authUser?.uid));
-	const showToast = useShowToast();
+  const [isLiking, setIsLiking] = useState(false);
+  const authUser = useAuthStore((state) => state.user);
+  const showToast = useShowToast();
 
-	const handleLikePost = async () => {
-		if (isUpdating) return;
-		if (!authUser) return showToast("Error", "Debes iniciar sesión para interactuar", "error");
-		setIsUpdating(true);
+  const handleLikePost = async () => {
+    if (!authUser) return showToast("Error", "Debes iniciar sesión", "error");
 
-		try {
-			const postRef = doc(firestore, "posts", post.id);
-			await updateDoc(postRef, {
-				likes: isLiked ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
-			});
+    setIsLiking(true);
 
-			setIsLiked(!isLiked);
-			isLiked ? setLikes(likes - 1) : setLikes(likes + 1);
-		} catch (error) {
-			showToast("Error", error.message, "error");
-		} finally {
-			setIsUpdating(false);
-		}
-	};
+    try {
+      const postRef = doc(firestore, "posts", post.id);
+      const isLiked = post.likes.includes(authUser.uid);
 
-	return { isLiked, likes, handleLikePost, isUpdating };
+      await updateDoc(postRef, {
+        likes: isLiked ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
+      });
+
+      // -------------------------
+      // NOTIFICACIÓN DE LIKE
+      // -------------------------
+      if (!isLiked && authUser.uid !== post.uid) {
+        await addDoc(collection(firestore, "notifications"), {
+          type: "like",
+          action: "le gustó tu publicación",
+          senderId: authUser.uid,
+          senderUsername: authUser.username,
+          senderPhoto: authUser.profilePicURL,
+          recipientId: post.uid,
+          postId: post.id,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+    } catch (error) {
+      showToast("Error", error.message, "error");
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
+  return { isLiking, handleLikePost };
 };
 
 export default useLikePost;

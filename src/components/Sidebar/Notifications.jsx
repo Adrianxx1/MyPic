@@ -1,5 +1,6 @@
 import { Box, Flex, Tooltip } from "@chakra-ui/react";
 import { NotificationsLogo } from "../../assets/constants";
+import { Link } from "react-router-dom";
 
 const Notifications = () => {
 	return (
@@ -11,18 +12,20 @@ const Notifications = () => {
 			openDelay={500}
 			display={{ base: "block", md: "none" }}
 		>
-			<Flex
-				alignItems={"center"}
-				gap={4}
-				_hover={{ bg: "whiteAlpha.400" }}
-				borderRadius={6}
-				p={2}
-				w={{ base: 10, md: "full" }}
-				justifyContent={{ base: "center", md: "flex-start" }}
-			>
-				<NotificationsLogo />
-				<Box display={{ base: "none", md: "block" }}>Notificaciones</Box>
-			</Flex>
+			<Link to="/notifications" style={{ width: "100%" }}>
+				<Flex
+					alignItems={"center"}
+					gap={4}
+					_hover={{ bg: "whiteAlpha.400" }}
+					borderRadius={6}
+					p={2}
+					w={{ base: 10, md: "full" }}
+					justifyContent={{ base: "center", md: "flex-start" }}
+				>
+					<NotificationsLogo />
+					<Box display={{ base: "none", md: "block" }}>Notificaciones</Box>
+				</Flex>
+			</Link>
 		</Tooltip>
 	);
 };

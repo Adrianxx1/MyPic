@@ -1,39 +1,53 @@
 import { useState } from "react";
-import useShowToast from "./useShowToast";
-import useAuthStore from "../store/authStore";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
-import usePostStore from "../store/postStore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import useAuthStore from "../store/authStore";
+import useShowToast from "./useShowToast";
 
-const usePostComment = () => {
-	const [isCommenting, setIsCommenting] = useState(false);
-	const showToast = useShowToast();
-	const authUser = useAuthStore((state) => state.user);
-	const addComment = usePostStore((state) => state.addComment);
+const useComment = (postId, postOwnerId) => {
+  const [isCommenting, setIsCommenting] = useState(false);
+  const authUser = useAuthStore((state) => state.user);
+  const showToast = useShowToast();
 
-	const handlePostComment = async (postId, comment) => {
-		if (isCommenting) return;
-		if (!authUser) return showToast("Error", "Debes haber iniciado sesión para comentar", "error");
-		setIsCommenting(true);
-		const newComment = {
-			comment,
-			createdAt: Date.now(),
-			createdBy: authUser.uid,
-			postId,
-		};
-		try {
-			await updateDoc(doc(firestore, "posts", postId), {
-				comments: arrayUnion(newComment),
-			});
-			addComment(postId, newComment);
-		} catch (error) {
-			showToast("Error", error.message, "error");
-		} finally {
-			setIsCommenting(false);
-		}
-	};
+  const handlePostComment = async (text) => {
+    if (!authUser) return showToast("Error", "Debes iniciar sesión", "error");
 
-	return { isCommenting, handlePostComment };
+    setIsCommenting(true);
+
+    try {
+      // Guardar comentario
+      await addDoc(collection(firestore, "posts", postId, "comments"), {
+        text,
+        uid: authUser.uid,
+        username: authUser.username,
+        userPhoto: authUser.profilePicURL,
+        createdAt: serverTimestamp(),
+      });
+
+      // -------------------------
+      // NOTIFICACIÓN DE COMENTARIO
+      // -------------------------
+      if (authUser.uid !== postOwnerId) {
+        await addDoc(collection(firestore, "notifications"), {
+          type: "comment",
+          action: "comentó tu publicación",
+          senderId: authUser.uid,
+          senderUsername: authUser.username,
+          senderPhoto: authUser.profilePicURL,
+          recipientId: postOwnerId,
+          postId,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+    } catch (error) {
+      showToast("Error", error.message, "error");
+    } finally {
+      setIsCommenting(false);
+    }
+  };
+
+  return { isCommenting, handlePostComment };
 };
 
-export default usePostComment;
+export default useComment;

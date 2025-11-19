@@ -3,18 +3,12 @@ import useFollowUser from "../../hooks/useFollowUser";
 import useAuthStore from "../../store/authStore";
 import { Link } from "react-router-dom";
 
-const SuggestedUser = ({ user, setUser }) => {
+const SuggestedUser = ({ user }) => {
 	const { isFollowing, isUpdating, handleFollowUser } = useFollowUser(user.uid);
 	const authUser = useAuthStore((state) => state.user);
 
 	const onFollowUser = async () => {
 		await handleFollowUser();
-		setUser({
-			...user,
-			followers: isFollowing
-				? user.followers.filter((follower) => follower.uid !== authUser.uid)
-				: [...user.followers, authUser],
-		});
 	};
 
 	return (
@@ -30,10 +24,11 @@ const SuggestedUser = ({ user, setUser }) => {
 						</Box>
 					</Link>
 					<Box fontSize={11} color={"gray.500"}>
-						{user.followers.length} followers
+						{user.followers?.length ?? 0} followers
 					</Box>
 				</VStack>
 			</Flex>
+
 			{authUser.uid !== user.uid && (
 				<Button
 					fontSize={13}
