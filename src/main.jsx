@@ -21,7 +21,7 @@ const config = {
 	useSystemColorMode: false,
 };
 
-// 3. extend the theme
+// extend the theme
 const theme = extendTheme({ config, styles });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -33,3 +33,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 		</BrowserRouter>
 	</React.StrictMode>
 );
+
+// ==========================
+//   PWA SERVICE WORKER
+// ==========================
+
+if ("serviceWorker" in navigator) {
+	window.addEventListener("load", () => {
+		navigator.serviceWorker
+			.register("/sw.js")
+			.then(() => console.log("Service Worker registrado ✔"))
+			.catch((err) => console.error("Error registrando SW:", err));
+	});
+}

@@ -41,7 +41,7 @@ const PostHeader = ({ post, creatorProfile }) => {
 					onClick={handleFollowUser}
 					isLoading={isUpdating}
 				>
-					{isFollowing ? "Unfollow" : "Follow"}
+					{isFollowing ? "Dejar de seguir" : "Seguir"}
 				</Button>
 			</Box>
 		</Flex>

@@ -51,7 +51,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 					</Text>
 					{post.comments.length > 0 && (
 						<Text fontSize='sm' color={"gray"} cursor={"pointer"} onClick={onOpen}>
-							View all {post.comments.length} comments
+							Ver todos los {post.comments.length} comentarios
 						</Text>
 					)}
 					{/* COMMENTS MODAL ONLY IN THE HOME PAGE */}
