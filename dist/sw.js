@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v7';
+const CACHE_VERSION = 'v8'; // ⬅️ IMPORTANTE: Cambiar versión
 const CACHE_NAME = `mypic-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `mypic-dynamic-${CACHE_VERSION}`;
 const IMAGE_CACHE = `mypic-images-${CACHE_VERSION}`;
@@ -28,7 +28,7 @@ const IGNORED_DOMAINS = [
 
 // Instalación
 self.addEventListener('install', (event) => {
-  console.log('[SW] Instalando Service Worker v6...');
+  console.log('[SW] Instalando Service Worker v8...');
   
   event.waitUntil(
     (async () => {
@@ -51,7 +51,7 @@ self.addEventListener('install', (event) => {
 
 // Activación
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activando Service Worker v6...');
+  console.log('[SW] Activando Service Worker v8...');
   
   event.waitUntil(
     (async () => {
@@ -133,9 +133,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // ⚠️ CRÍTICO: No interceptar Firebase Auth, Firestore, etc.
+  // ⚠️ CRÍTICO FIX: Dejar que Firebase pase sin interceptar
+  // pero SÍ retornando fetch() para que falle naturalmente
   if (shouldIgnore(request.url)) {
-    return; // Dejar que pase directo a la red
+    event.respondWith(fetch(request)); // ⬅️ CAMBIO CRÍTICO
+    return;
   }
 
   event.respondWith(
