@@ -172,7 +172,7 @@ function useCreatePost() {
 
             showToast("Finalizado", "Publicación creada correctamente", "success");
         } catch (error) {
-            showToast("Error", error.message, "error");
+            showToast("Error", "revisa si cargaste una imagen válida", "error");
         } finally {
             setIsLoading(false);
         }
