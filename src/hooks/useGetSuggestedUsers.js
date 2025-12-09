@@ -15,23 +15,46 @@ const useGetSuggestedUsers = () => {
 			setIsLoading(true);
 			try {
 				const usersRef = collection(firestore, "users");
-				const q = query(
-					usersRef,
-					where("uid", "not-in", [authUser.uid, ...authUser.following]),
-					orderBy("uid"),
-					limit(3)
-				);
+				
+				// Crear lista de usuarios a excluir (máximo 10 para not-in)
+				const followingList = authUser.following || [];
+				const excludeList = [authUser.uid, ...followingList].slice(0, 10);
+
+				let q;
+				
+				// Si tenemos menos de 10 usuarios a excluir, usamos not-in
+				if (excludeList.length <= 10) {
+					q = query(
+						usersRef,
+						where("uid", "not-in", excludeList),
+						orderBy("uid"),
+						limit(10) // Pedimos más para filtrar después
+					);
+				} else {
+					// Si tenemos más de 10, obtenemos usuarios y filtramos en el cliente
+					q = query(
+						usersRef,
+						orderBy("uid"),
+						limit(20) // Pedimos más para tener suficientes después del filtrado
+					);
+				}
 
 				const querySnapshot = await getDocs(q);
 				const users = [];
 
 				querySnapshot.forEach((doc) => {
-					users.push({ ...doc.data(), id: doc.id });
+					const userData = doc.data();
+					// Filtrar manualmente usuarios que ya seguimos o somos nosotros
+					if (userData.uid !== authUser.uid && !followingList.includes(userData.uid)) {
+						users.push({ ...userData, id: doc.id });
+					}
 				});
 
-				setSuggestedUsers(users);
+				// Tomar solo los primeros 3
+				setSuggestedUsers(users.slice(0, 3));
 			} catch (error) {
 				showToast("Error", error.message, "error");
+				console.error("Error obteniendo usuarios sugeridos:", error);
 			} finally {
 				setIsLoading(false);
 			}

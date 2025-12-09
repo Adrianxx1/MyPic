@@ -20,6 +20,9 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 		setComment("");
 	};
 
+	// Asegurarse de que comments siempre sea un array
+	const commentsArray = Array.isArray(post.comments) ? post.comments : [];
+
 	return (
 		<Box mb={10} marginTop={"auto"}>
 			<Flex alignItems={"center"} gap={4} w={"full"} pt={0} mb={2} mt={4}>
@@ -49,9 +52,9 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 							{post.caption}
 						</Text>
 					</Text>
-					{post.comments.length > 0 && (
+					{commentsArray.length > 0 && (
 						<Text fontSize='sm' color={"gray"} cursor={"pointer"} onClick={onOpen}>
-							Ver todos los {post.comments.length} comentarios
+							Ver todos los {commentsArray.length} comentarios
 						</Text>
 					)}
 					{/* COMMENTS MODAL ONLY IN THE HOME PAGE */}

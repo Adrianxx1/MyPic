@@ -10,7 +10,7 @@ const useFollowUser = (userId) => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   const authUser = useAuthStore((state) => state.user);
-  const fetchAuthUser = useAuthStore((state) => state.fetchUserFromFirestore);
+  const setAuthUser = useAuthStore((state) => state.setUser);
 
   const { userProfile, setUserProfile } = useUserProfileStore();
   const showToast = useShowToast();
@@ -46,16 +46,28 @@ const useFollowUser = (userId) => {
         });
       }
 
-      // 🔥 Recargar datos reales del usuario desde Firestore
-      await fetchAuthUser(authUser.uid);
+      // Actualizar el authUser localmente
+      if (isFollowing) {
+        // Unfollow
+        setAuthUser({
+          ...authUser,
+          following: authUser.following.filter((uid) => uid !== userId),
+        });
+      } else {
+        // Follow
+        setAuthUser({
+          ...authUser,
+          following: [...(authUser.following || []), userId],
+        });
+      }
 
       // Actualizar perfil del usuario visitado
       if (userProfile) {
         setUserProfile({
           ...userProfile,
           followers: isFollowing
-            ? userProfile.followers.filter((uid) => uid !== authUser.uid)
-            : [...userProfile.followers, authUser.uid],
+            ? (userProfile.followers || []).filter((uid) => uid !== authUser.uid)
+            : [...(userProfile.followers || []), authUser.uid],
         });
       }
 
@@ -63,6 +75,7 @@ const useFollowUser = (userId) => {
 
     } catch (error) {
       showToast("Error", error.message, "error");
+      console.error("Error en follow:", error);
     } finally {
       setIsUpdating(false);
     }
@@ -70,7 +83,9 @@ const useFollowUser = (userId) => {
 
   useEffect(() => {
     if (authUser) {
-      setIsFollowing(authUser.following.includes(userId));
+      // Asegurarse de que following existe y es un array
+      const followingArray = Array.isArray(authUser.following) ? authUser.following : [];
+      setIsFollowing(followingArray.includes(userId));
     }
   }, [authUser, userId]);
 
