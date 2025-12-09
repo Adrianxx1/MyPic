@@ -16,7 +16,7 @@ const AuthPage = () => {
 						<AuthForm />
 						<Box textAlign={"center"} mb={0}>Instala nuestra aplicación.</Box>
 						<Flex gap={1} justifyContent={"center"} mt={0}>
-							<Link href="https://drive.google.com/drive/folders/1GhJB5NAcGuNSZnTNmtCxuU4blKqE0Owy?usp=sharing" isExternal>
+							<Link href="https://drive.google.com/drive/folders/1GgAKEUK3IsgzLcfKPTqEJGh8gsbQSisb?usp=sharing" isExternal>
 								<Image 
 									src='/descarga.png' 
 									h={"180"} 

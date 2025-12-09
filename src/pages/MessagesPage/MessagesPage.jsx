@@ -17,9 +17,9 @@ import {
 	ModalCloseButton,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { collection, query, where, getDocs, limit } from "firebase/firestore";
+import { collection, query, where, getDocs, limit, doc, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useGetUserMessages from "../../hooks/useGetUserMessages";
 import useSendMessage from "../../hooks/useSendMessage";
@@ -31,10 +31,40 @@ const MessagesPage = () => {
 	const [messageText, setMessageText] = useState("");
 	const [searchUsers, setSearchUsers] = useState([]);
 	const [isSearching, setIsSearching] = useState(false);
+	const [currentMessages, setCurrentMessages] = useState([]);
+	const messagesEndRef = useRef(null);
 	const authUser = useAuthStore((state) => state.user);
 	const { conversations, isLoading } = useGetUserMessages();
 	const { sendMessage, isSending } = useSendMessage();
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	// Scroll automático al final de los mensajes
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	};
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [currentMessages]);
+
+	// Escuchar mensajes en tiempo real cuando se selecciona un usuario
+	useEffect(() => {
+		if (!selectedUser || !authUser) return;
+
+		const chatId = [authUser.uid, selectedUser.uid].sort().join("_");
+		const messageDocRef = doc(firestore, "messages", chatId);
+
+		const unsubscribe = onSnapshot(messageDocRef, (docSnap) => {
+			if (docSnap.exists()) {
+				const data = docSnap.data();
+				setCurrentMessages(data.messages || []);
+			} else {
+				setCurrentMessages([]);
+			}
+		});
+
+		return () => unsubscribe();
+	}, [selectedUser, authUser]);
 
 	const handleSendMessage = async () => {
 		if (!messageText.trim() || !selectedUser) return;
@@ -77,10 +107,18 @@ const MessagesPage = () => {
 			username: user.username,
 			fullName: user.fullName,
 			profilePicURL: user.profilePicURL,
-			messages: [],
 		});
 		onClose();
 		setSearchUsers([]);
+	};
+
+	const handleSelectConversation = (conv) => {
+		setSelectedUser({
+			uid: conv.uid,
+			username: conv.username,
+			fullName: conv.fullName,
+			profilePicURL: conv.profilePicURL,
+		});
 	};
 
 	const filteredConversations = conversations.filter((conv) =>
@@ -140,7 +178,7 @@ const MessagesPage = () => {
 									cursor="pointer"
 									_hover={{ bg: "whiteAlpha.200" }}
 									bg={selectedUser?.uid === conv.uid ? "whiteAlpha.300" : "transparent"}
-									onClick={() => setSelectedUser(conv)}
+									onClick={() => handleSelectConversation(conv)}
 									borderBottomWidth="1px"
 									borderColor="whiteAlpha.100"
 								>
@@ -190,8 +228,8 @@ const MessagesPage = () => {
 
 						{/* Mensajes */}
 						<VStack flex={1} p={4} spacing={3} align="stretch" overflowY="auto" bg="blackAlpha.200">
-							{selectedUser.messages?.length > 0 ? (
-								selectedUser.messages.map((msg, idx) => (
+							{currentMessages.length > 0 ? (
+								currentMessages.map((msg, idx) => (
 									<Flex key={idx} justify={msg.senderId === authUser.uid ? "flex-end" : "flex-start"}>
 										<Box
 											maxW="70%"
@@ -215,6 +253,7 @@ const MessagesPage = () => {
 									<Text color="gray.500">Envía el primer mensaje</Text>
 								</Flex>
 							)}
+							<div ref={messagesEndRef} />
 						</VStack>
 
 						{/* Input */}
