@@ -1,4 +1,4 @@
-import { Container, Flex, VStack, Box, Image } from "@chakra-ui/react";
+import { Container, Flex, VStack, Box, Image, Link } from "@chakra-ui/react";
 import AuthForm from "../../components/AuthForm/AuthForm";
 
 const AuthPage = () => {
@@ -12,12 +12,19 @@ const AuthPage = () => {
 					</Box>
 
 					{/* Right hand-side */}
-					<VStack spacing={4} align={"stretch"}>
+					<VStack spacing={1} align={"stretch"}>
 						<AuthForm />
-						<Box textAlign={"center"}>Instala nuestra aplicación.</Box>
-						<Flex gap={5} justifyContent={"center"}>
-							<Image src='/playstore.png' h={"10"} alt='Playstore logo' />
-							<Image src='/microsoft.png' h={"10"} alt='Microsoft logo' />
+						<Box textAlign={"center"} mb={0}>Instala nuestra aplicación.</Box>
+						<Flex gap={1} justifyContent={"center"} mt={0}>
+							<Link href="https://drive.google.com/drive/folders/1GhJB5NAcGuNSZnTNmtCxuU4blKqE0Owy?usp=sharing" isExternal>
+								<Image 
+									src='/descarga.png' 
+									h={"180"} 
+									alt='descarga logo'
+									cursor={"pointer"}
+									_hover={{ transform: "scale(1.05)", transition: "0.3s" }}
+								/>
+							</Link>
 						</Flex>
 					</VStack>
 				</Flex>

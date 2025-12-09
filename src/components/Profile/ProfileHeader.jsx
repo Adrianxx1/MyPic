@@ -1,5 +1,6 @@
 import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure, IconButton, Tooltip } from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
+import { Link as RouterLink } from "react-router-dom";
 import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
@@ -96,13 +97,25 @@ const ProfileHeader = () => {
 						</Text>
 						Publicaciones 
 					</Text>
-					<Text fontSize={{ base: "xs", md: "sm" }}>
+					<Text 
+						fontSize={{ base: "xs", md: "sm" }}
+						cursor="pointer"
+						_hover={{ opacity: 0.7 }}
+						as={RouterLink}
+						to={`/${userProfile?.username}/followers`}
+					>
 						<Text as='span' fontWeight={"bold"} mr={1}>
 							{followersCount}
 						</Text>
 						Seguidores
 					</Text>
-					<Text fontSize={{ base: "xs", md: "sm" }}>
+					<Text 
+						fontSize={{ base: "xs", md: "sm" }}
+						cursor="pointer"
+						_hover={{ opacity: 0.7 }}
+						as={RouterLink}
+						to={`/${userProfile?.username}/followers`}
+					>
 						<Text as='span' fontWeight={"bold"} mr={1}>
 							{followingCount}
 						</Text>

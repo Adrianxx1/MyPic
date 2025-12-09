@@ -15,7 +15,7 @@ import {
 	ModalOverlay,
 	Stack,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import useAuthStore from "../../store/authStore";
 import usePreviewImg from "../../hooks/usePreviewImg";
 import useEditProfile from "../../hooks/useEditProfile";
@@ -24,16 +24,27 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
 const EditProfile = ({ isOpen, onClose }) => {
+	const authUser = useAuthStore((state) => state.user);
 	const [inputs, setInputs] = useState({
 		fullName: "",
 		username: "",
 		bio: "",
 	});
-	const authUser = useAuthStore((state) => state.user);
 	const fileRef = useRef(null);
 	const { handleImageChange, selectedFile, setSelectedFile } = usePreviewImg();
 	const { isUpdating, editProfile } = useEditProfile();
 	const showToast = useShowToast();
+
+	// ✅ Inicializar inputs cuando se abre el modal
+	useEffect(() => {
+		if (isOpen && authUser) {
+			setInputs({
+				fullName: authUser.fullName || "",
+				username: authUser.username || "",
+				bio: authUser.bio || "",
+			});
+		}
+	}, [isOpen, authUser]);
 
 	// ✅ Función para verificar si el username ya está en uso
 	const isUsernameTaken = async (username) => {
@@ -69,7 +80,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 					<Flex bg={"black"}>
 						<Stack spacing={4} w={"full"} maxW={"md"} bg={"black"} p={6} my={0}>
 							<Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-								Edit Profile
+								Editar Perfil
 							</Heading>
 							<FormControl>
 								<Stack direction={["column", "row"]} spacing={6}>
@@ -82,7 +93,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 									</Center>
 									<Center w='full'>
 										<Button w='full' onClick={() => fileRef.current.click()}>
-											Edit Profile Picture
+											Editar Foto de Perfil
 										</Button>
 									</Center>
 									<Input type='file' hidden ref={fileRef} onChange={handleImageChange} />
@@ -90,12 +101,12 @@ const EditProfile = ({ isOpen, onClose }) => {
 							</FormControl>
 
 							<FormControl>
-								<FormLabel fontSize={"sm"}>Full Name</FormLabel>
+								<FormLabel fontSize={"sm"}>Nombre Completo</FormLabel>
 								<Input
 									placeholder={"Full Name"}
 									size={"sm"}
 									type={"text"}
-									value={inputs.fullName || authUser.fullName}
+									value={inputs.fullName}
 									onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
 								/>
 							</FormControl>
@@ -106,7 +117,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 									placeholder={"Username"}
 									size={"sm"}
 									type={"text"}
-									value={inputs.username || authUser.username}
+									value={inputs.username}
 									onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
 								/>
 							</FormControl>
@@ -117,7 +128,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 									placeholder={"Bio"}
 									size={"sm"}
 									type={"text"}
-									value={inputs.bio || authUser.bio}
+									value={inputs.bio}
 									onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
 								/>
 							</FormControl>
@@ -131,7 +142,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 									_hover={{ bg: "red.500" }}
 									onClick={onClose}
 								>
-									Cancel
+									Cancelar
 								</Button>
 								<Button
 									bg={"blue.400"}
@@ -142,7 +153,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 									onClick={handleEditProfile}
 									isLoading={isUpdating}
 								>
-									Submit
+									Guardar
 								</Button>
 							</Stack>
 						</Stack>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import useShowToast from "./useShowToast";
 import useAuthStore from "../store/authStore";
 import usePostStore from "../store/postStore";
-import { arrayUnion, doc, updateDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc, addDoc, collection, serverTimestamp, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 
 const usePostComment = () => {
@@ -33,21 +33,24 @@ const usePostComment = () => {
 			// Actualizar el store local
 			addComment(postId, newComment);
 
-			// Opcional: Crear notificación si quieres
-			// const postDoc = await getDoc(doc(firestore, "posts", postId));
-			// const postOwnerId = postDoc.data().createdBy;
-			// if (authUser.uid !== postOwnerId) {
-			//   await addDoc(collection(firestore, "notifications"), {
-			//     type: "comment",
-			//     action: "comentó tu publicación",
-			//     senderId: authUser.uid,
-			//     senderUsername: authUser.username,
-			//     senderPhoto: authUser.profilePicURL,
-			//     recipientId: postOwnerId,
-			//     postId,
-			//     createdAt: serverTimestamp(),
-			//   });
-			// }
+			// Crear notificación
+			const postDoc = await getDoc(doc(firestore, "posts", postId));
+			const postOwnerId = postDoc.data().createdBy;
+			
+			// Solo crear notificación si NO es tu propio post
+			if (authUser.uid !== postOwnerId) {
+				await addDoc(collection(firestore, "notifications"), {
+					type: "comment",
+					action: "comentó tu publicación",
+					senderId: authUser.uid,
+					senderUsername: authUser.username,
+					senderPhoto: authUser.profilePicURL,
+					recipientId: postOwnerId,
+					postId,
+					read: false,
+					createdAt: serverTimestamp(),
+				});
+			}
 
 			showToast("Éxito", "Comentario publicado", "success");
 		} catch (error) {
